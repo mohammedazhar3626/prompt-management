@@ -1,4 +1,4 @@
-import React,{ useEffect } from "react"
+import React, { useEffect } from "react"
 import { navigation } from "../../constants/navigation"
 import { useAuth } from "../../store/auth.store"
 import { NavLink, useLocation, useNavigate } from "react-router-dom"
@@ -77,10 +77,14 @@ export default function Sidebar() {
                         </div>
                     )
                 })}
-                <p className="Sidebar-Container__title">
-                    {"Saved Prompts"}
-                </p>
-                <div className="Sidebar-Container__divider"></div>
+                {savedPrompts.length > 0 && (
+                    <>
+                        <p className="Sidebar-Container__title">
+                            {"Saved Prompts"}
+                        </p>
+                        <div className="Sidebar-Container__divider"></div>
+                    </>
+                )}
                 {React.Children.toArray(savedPrompts.map((item) => {
                     const Icon = iconMap[item.icon] || SquarePlus
                     const path = `/saved-prompts/${item.id}`

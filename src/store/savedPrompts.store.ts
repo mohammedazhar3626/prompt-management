@@ -1,7 +1,9 @@
+import { toast } from "react-toastify"
 import { create } from "zustand"
 
 type Prompt = {
     id: number
+    key: string
     text: string
     label: string
     icon: string
@@ -19,16 +21,22 @@ const store = create<Store>((set) => ({
 
     addPrompt: (prompt) =>
         set((state) => {
+            const exists = state.savedPrompts.some(p => p.key === prompt.key)
+            if (exists) {
+                toast.info("Prompt already saved")
+                return state
+            }
             const updated = [prompt, ...state.savedPrompts].slice(0, 10)
 
             localStorage.setItem("savedPrompts", JSON.stringify(updated))
-
+            toast.success("Prompt saved successfully")
             return { savedPrompts: updated }
         }),
     removePrompt: (id) =>
         set((state) => {
             const updated = state.savedPrompts.filter(p => p.id !== id)
             localStorage.setItem("savedPrompts", JSON.stringify(updated))
+            toast.success("Prompt deleted successfully")
             return { savedPrompts: updated }
         }),
 

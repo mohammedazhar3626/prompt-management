@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom"
 import { login } from "../../services/auth.api"
 import { useAuth } from "../../store/auth.store"
 import { useUI } from "../../store/ui.store"
+import { toast } from "react-toastify"
 import {
     validateUsername,
     validatePassword
@@ -45,9 +46,11 @@ const Login = () => {
             const { password: _password, ...safeUser } = user || {}
 
             setUser(safeUser)
+            toast.success("Login successful")
             showLoader()
             navigate("/playground", { replace: true })
         } catch (err: any) {
+            toast.error(err.message || "Login failed")
             setApiError(err.message)
         }
 

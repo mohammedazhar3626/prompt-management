@@ -21,10 +21,13 @@ const Templates = lazy(() => retryImport(() => import("templates/Templates")))
 const Evaluation = lazy(() => retryImport(() => import("evaluation/Evaluation")))
 
 //Local Navigation
-import { useParams } from "react-router-dom"
+import { useParams, useNavigate } from "react-router-dom"
+
 const SavedPromptWrapper = () => {
     const { id } = useParams()
-    return <SavedPromptDetail id={id} />
+    const navigate = useNavigate()
+
+    return <SavedPromptDetail id={id} onDeleteSuccess={() => navigate("/playground")} />
 }
 
 
