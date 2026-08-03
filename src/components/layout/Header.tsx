@@ -29,8 +29,8 @@ export default function Header() {
             </div>
             <div className="HeaderContainer__user-sec">
                 <p>{`Welcome ${user?.name}`}</p>
-                <img src="mail.svg" alt="L" />
-                <img src="bell.svg" alt="L" />
+                <img src="/mail.svg" alt="L" />
+                <img src="/bell.svg" alt="L" />
                 <button className="HeaderContainer__logout" onClick={handleLogout}>
                     Logout
                 </button>

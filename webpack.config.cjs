@@ -1,4 +1,5 @@
 const HtmlWebpackPlugin = require("html-webpack-plugin")
+const CopyWebpackPlugin = require("copy-webpack-plugin")
 const { ModuleFederationPlugin } = require("webpack").container
 const path = require("path")
 const envFile = process.env.NODE_ENV === "production" ? ".env.prod" : ".env.dev"
@@ -20,7 +21,9 @@ module.exports = {
         liveReload: true
     },
     output: {
+        path: path.resolve(__dirname, "dist"),
         publicPath: "auto",
+        clean: true,
     },
     resolve: {
         extensions: [".tsx", ".ts", ".js"],
@@ -59,6 +62,16 @@ module.exports = {
         }),
         new HtmlWebpackPlugin({
             template: "./public/index.html",
+        }),
+        new CopyWebpackPlugin({
+            patterns: [
+                {
+                    from: path.resolve(__dirname, "public"),
+                    globOptions: {
+                        ignore: ["**/index.html"],
+                    },
+                },
+            ],
         }),
     ],
 }
