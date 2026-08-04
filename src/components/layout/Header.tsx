@@ -4,8 +4,9 @@ import { useMatches, useNavigate } from "react-router-dom";
 import { useUI } from "../../store/ui.store";
 import { toast } from "react-toastify";
 import { useSavedPrompts } from "../../store/savedPrompts.store";
+import ConfirmModal from "../../components/modal/ConfirmModal";
+import { Menu, X } from "lucide-react"
 import "./Header.scss"
-import ConfirmModal from "../model/ConfirmModal";
 
 type RouteHandle = {
     title?: string
@@ -21,6 +22,10 @@ export default function Header() {
     const title = handle?.title || 'App'
     const { showLoader } = useUI()
 
+
+    const toggleSidebar = useUI((state) => state.toggleSidebar)
+    const sidebarCollapsed = useUI((state) => state.sidebarCollapsed)
+
     const confirmLogout = () => {
         logout()
         useSavedPrompts.getState().syncPrompts()
@@ -31,6 +36,11 @@ export default function Header() {
 
     return (
         <div className="HeaderContainer">
+            <button className={`HeaderContainer__menu ${sidebarCollapsed ? "HeaderContainer__menu--collapsed" : ""}`} onClick={toggleSidebar} aria-label={sidebarCollapsed ? "Open Sidebar" : "Close Sidebar"} aria-expanded={!sidebarCollapsed}>
+                {
+                    sidebarCollapsed ? <Menu size={20} strokeWidth={2.2} /> : <X size={20} strokeWidth={2.2} />
+                }
+            </button>
             <div className="HeaderContainer__title">
                 <h2>{title}</h2>
             </div>
@@ -48,6 +58,9 @@ export default function Header() {
                 onConfirm={confirmLogout}
                 title="Confirm Logout"
                 message="Are you sure you want to logout?"
+                type="default"
+                confirmText="Logout"
+                cancelText="Cancel"
             />
         </div>
     )
