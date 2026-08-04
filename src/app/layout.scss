@@ -9,11 +9,13 @@
     font-family: Arial, sans-serif;
 
     &__sidebar {
-        width: 240px;
+        width: 260px;
         background: #1e1e2f;
         color: #fff;
         display: flex;
         flex-direction: column;
+        transition: width 0.3s ease;
+        flex-shrink: 0;
     }
 
     &__header {
@@ -24,14 +26,22 @@
 
     &__content {
         flex: 1;
+        overflow: auto;
         display: flex;
         flex-direction: column;
         background: #ffffff;
+        transition: margin .28s cubic-bezier(.4, 0, .2, 1);
     }
 
     &__main {
         flex: 1;
         overflow-y: auto;
+    }
+}
+
+.layout--collapsed {
+    .layout__sidebar {
+        width: 72px;
     }
 }
 

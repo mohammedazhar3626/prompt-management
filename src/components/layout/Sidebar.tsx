@@ -23,6 +23,9 @@ export default function Sidebar() {
     const role = user?.role || ""
     const menu = navigation.filter(item => item.roles.includes(role))
 
+
+    const sidebarCollapsed = useUI((state) => state.sidebarCollapsed)
+
     useEffect(() => {
         const handler = () => {
             syncPrompts()
@@ -38,10 +41,10 @@ export default function Sidebar() {
     }, [location.key])
 
     return (
-        <div className="Sidebar-Container">
-            <h2>
-                <MessageSquareText size={20} />
-                PROMPT MANAGEMENT
+        <div className={`Sidebar-Container ${sidebarCollapsed ? "Sidebar-Container--collapsed" : ""}`}>
+            <h2 className="Sidebar-Container__header" title={sidebarCollapsed ? "Prompt Management" : ""}>
+                {!sidebarCollapsed && <span>Prompt Management</span>}
+                {sidebarCollapsed && <MessageSquareText size={20} />}
             </h2>
 
             <div className="Sidebar-Container__innerContainer">
@@ -70,7 +73,7 @@ export default function Sidebar() {
                                 }
                             >
                                 <Icon size={18} />
-                                <span className="Sidebar-Container__label">
+                                <span className={`Sidebar-Container__label ${sidebarCollapsed ? "Sidebar-Container__label--hidden" : ""}`}>
                                     {item.label}
                                 </span>
                             </NavLink>
@@ -79,10 +82,14 @@ export default function Sidebar() {
                 })}
                 {savedPrompts.length > 0 && (
                     <>
-                        <p className="Sidebar-Container__title">
-                            {"Saved Prompts"}
-                        </p>
-                        <div className="Sidebar-Container__divider"></div>
+                        {!sidebarCollapsed && (
+                            <p className="Sidebar-Container__title">
+                                {"Saved Prompts"}
+                            </p>
+                        )}
+                        {!sidebarCollapsed && (
+                            <div className="Sidebar-Container__divider"></div>
+                        )}
                     </>
                 )}
                 {React.Children.toArray(savedPrompts.map((item) => {
@@ -107,9 +114,11 @@ export default function Sidebar() {
                                 }
                             >
                                 <Icon size={18} className="saved-icon" />
-                                <span className="saved-label">
-                                    {item.label}...
-                                </span>
+                                {!sidebarCollapsed && (
+                                    <span className="saved-label">
+                                        {item.label}...
+                                    </span>
+                                )}
                             </NavLink>
                         </>
                     )

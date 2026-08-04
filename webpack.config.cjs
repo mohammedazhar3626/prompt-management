@@ -52,7 +52,8 @@ module.exports = {
             },
             exposes: {
                 "./authStore": "./src/store/auth.store.ts",
-                "./savedPromptsStore": "./src/store/savedPrompts.store.ts"
+                "./savedPromptsStore": "./src/store/savedPrompts.store.ts",
+                "./ConfirmModal": "./src/components/modal/ConfirmModal.tsx"
             },
             shared: {
                 react: { singleton: true, requiredVersion: false },
