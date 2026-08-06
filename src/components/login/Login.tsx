@@ -67,7 +67,7 @@ const Login = () => {
     return (
         <div className="login">
             <div className="login__card">
-                <h2 className="login__title">Prompt Platform Loginnn</h2>
+                <h2 className="login__title">Prompt Platform Login</h2>
                 <form className="login__fields-sec" onSubmit={handleSubmit}>
                     <div className="login__field">
                         <label>Username</label>

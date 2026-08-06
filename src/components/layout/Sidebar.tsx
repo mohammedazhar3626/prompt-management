@@ -61,7 +61,7 @@ export default function Sidebar() {
                             <NavLink
                                 to={item.path}
                                 onClick={(e) => {
-                                    if (loading || location.pathname === item.path) {
+                                    if (loading) {
                                         e.preventDefault()
                                         return
                                     }
@@ -102,7 +102,7 @@ export default function Sidebar() {
                                 key={item.id}
                                 to={path}
                                 onClick={(e) => {
-                                    if (loading || location.pathname === path) {
+                                    if (loading) {
                                         e.preventDefault()
                                         return
                                     }

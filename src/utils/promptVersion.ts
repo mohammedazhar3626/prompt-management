@@ -4,7 +4,7 @@ export const getCurrentVersion = (
     prompt: SavedPrompt
 ): PromptVersion | undefined => {
     return prompt.versions.find(
-        version => version.version === prompt.currentVersion
+        v => v.version === prompt.currentVersion
     )
 }
 
@@ -18,12 +18,19 @@ export const getNextVersion = (
 
 export const isPromptChanged = (
     prompt: SavedPrompt,
-    text: string
+    version: Omit<PromptVersion, "id" | "version" | "createdAt">
 ): boolean => {
     const current = getCurrentVersion(prompt)
-
+    if (!current) {
+        return true
+    }
     return (
-        current?.text.trim() !== text.trim()
+        current.prompt !== version.prompt ||
+        current.systemPrompt !== version.systemPrompt ||
+        current.userPrompt !== version.userPrompt ||
+        current.output !== version.output ||
+        current.text !== version.text
+
     )
 }
 

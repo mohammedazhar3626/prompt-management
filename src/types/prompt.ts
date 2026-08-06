@@ -1,6 +1,10 @@
 export type PromptVersion = {
     id: number
     version: number
+    prompt: string
+    systemPrompt: string
+    userPrompt: string
+    output: string
     text: string
     createdAt: string
 }

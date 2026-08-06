@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react"
+import { lazy, Suspense, useEffect } from "react"
 import { createHashRouter, Navigate } from "react-router-dom"
 
 import Layout from "../app/layout"
@@ -23,11 +23,26 @@ const Evaluation = lazy(() => retryImport(() => import("evaluation/Evaluation"))
 //Local Navigation
 import { useParams, useNavigate } from "react-router-dom"
 
+const PlaygroundWrapper = () => {
+    const { id } = useParams()
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        const handler = (e: Event) => {
+            const event = e as CustomEvent<{ id: number }>
+            navigate(`/saved-prompts/${event.detail.id}`)
+        }
+        window.addEventListener("prompt-version-created", handler)
+        return () => window.removeEventListener("prompt-version-created", handler)
+    }, [navigate])
+    return <Playground />
+}
+
 const SavedPromptWrapper = () => {
     const { id } = useParams()
     const navigate = useNavigate()
 
-    return <SavedPromptDetail id={id} onDeleteSuccess={() => navigate("/playground")} />
+    return <SavedPromptDetail id={id} onDelete={() => navigate("/playground")} onEdit={(promptId: any) => navigate(`/playground?edit=${promptId}&version=current`)} />
 }
 
 
@@ -62,7 +77,7 @@ export const router = createHashRouter([
                 element: (
                     <ProtectedRoute allowedRoles={["admin", "developer", "user"]}>
                         <SafeRemote fallback={<div>Failed to load Playground</div>}>
-                            <Playground />
+                            <PlaygroundWrapper />
                         </SafeRemote>
                     </ProtectedRoute>
                 ),

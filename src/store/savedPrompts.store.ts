@@ -1,6 +1,6 @@
 import { toast } from "react-toastify"
 import { create } from "zustand"
-import { SavedPrompt } from "../types/prompt"
+import { PromptVersion, SavedPrompt } from "../types/prompt"
 import { getCurrentVersion, getNextVersion, isPromptChanged } from "../utils/promptVersion"
 
 type Prompt = {
@@ -13,8 +13,14 @@ type Prompt = {
 
 type Store = {
     savedPrompts: SavedPrompt[]
-    addPrompt: (prompt: Omit<SavedPrompt, "currentVersion" | "versions"> & { text: string }) => void
-    createVersion: (promptId: number, text: string) => void
+    addPrompt: (prompt: Omit<SavedPrompt, "currentVersion" | "versions"> & {
+        prompt: string
+        systemPrompt: string
+        userPrompt: string
+        output: string
+        text: string
+    }) => void
+    createVersion: (promptId: number, version: Omit<PromptVersion, "id" | "version" | "createdAt">) => void
     removePrompt: (id: number) => void
     syncPrompts: () => void
 }
@@ -34,6 +40,10 @@ const store = create<Store>((set) => ({
                     {
                         id: Date.now(),
                         version: 1,
+                        prompt: prompt.prompt,
+                        systemPrompt: prompt.systemPrompt,
+                        userPrompt: prompt.userPrompt,
+                        output: prompt.output,
                         text: prompt.text,
                         createdAt: new Date().toISOString()
                     }
@@ -45,7 +55,7 @@ const store = create<Store>((set) => ({
             toast.success("Prompt saved successfully")
             return { savedPrompts: updated }
         }),
-    createVersion: (promptId, text) =>
+    createVersion: (promptId, version) =>
         set((state) => {
             let versionCreated = false
             const updated = state.savedPrompts.map(prompt => {
@@ -53,8 +63,14 @@ const store = create<Store>((set) => ({
                     return prompt
                 }
 
-                if (!isPromptChanged(prompt, text)) {
+                if (!isPromptChanged(prompt, version)) {
                     toast.info("Prompt is already up to date")
+                    return prompt
+                }
+
+                const currentVersion = getCurrentVersion(prompt)
+
+                if (!currentVersion) {
                     return prompt
                 }
 
@@ -67,11 +83,18 @@ const store = create<Store>((set) => ({
                     versions: [...prompt.versions, {
                         id: Date.now(),
                         version: nextVersion,
-                        text: text,
+                        prompt: version.prompt,
+                        systemPrompt: version.systemPrompt,
+                        userPrompt: version.userPrompt,
+                        output: version.output,
+                        text: version.text,
                         createdAt: new Date().toISOString()
                     }]
                 }
             })
+            if (!versionCreated) {
+                return state
+            }
             localStorage.setItem("savedPrompts", JSON.stringify(updated))
             if (versionCreated) toast.success("Prompt new version created")
             return { savedPrompts: updated }
