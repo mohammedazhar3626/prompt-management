@@ -1,12 +1,14 @@
-import React, { useEffect } from "react"
+import React, { useState, useEffect } from "react"
 import { navigation } from "../../constants/navigation"
 import { useAuth } from "../../store/auth.store"
 import { NavLink, useLocation, useNavigate } from "react-router-dom"
 import { MessageSquareText, SquarePlus } from "lucide-react"
 import { useUI } from "../../store/ui.store"
 import { useSavedPrompts } from "../../store/savedPrompts.store"
+import ConfirmModal from "../modal/ConfirmModal"
 
 import "./Sidebar.scss"
+import { useNavigationStore } from "../../store/navigation.store"
 
 const iconMap: Record<string, any> = {
     SquarePlus
@@ -25,6 +27,45 @@ export default function Sidebar() {
 
 
     const sidebarCollapsed = useUI((state) => state.sidebarCollapsed)
+
+    //discradChangesNavigation
+    const [showConfirmModal, setShowConfirmModal] = useState(false)
+    const [pendingNavigation, setPendingNavigation] = useState<string | null>(null)
+    const { playgroundDirty, setPlaygroundDirty } = useNavigationStore()
+
+    const handleNavigation = (e: React.MouseEvent, path: string) => {
+        if (loading) {
+            e.preventDefault()
+            return
+        }
+        if (!playgroundDirty) {
+            showLoader()
+            return
+        }
+
+        e.preventDefault()
+
+        setPendingNavigation(path)
+        setShowConfirmModal(true)
+    }
+
+    const handleDiscard = () => {
+        setPlaygroundDirty(false)
+        setShowConfirmModal(false)
+        if (!pendingNavigation) return
+        const path = pendingNavigation
+        setPendingNavigation(null)
+        showLoader()
+        navigate(path)
+    }
+
+
+    const handleCancel = () => {
+        setPendingNavigation(null)
+        setShowConfirmModal(false)
+    }
+
+
 
     useEffect(() => {
         const handler = () => {
@@ -60,13 +101,7 @@ export default function Sidebar() {
 
                             <NavLink
                                 to={item.path}
-                                onClick={(e) => {
-                                    if (loading) {
-                                        e.preventDefault()
-                                        return
-                                    }
-                                    showLoader()
-                                }}
+                                onClick={(e) => handleNavigation(e, item.path)}
                                 className={({ isActive }) =>
                                     `Sidebar-Container__link ${isActive ? "Sidebar-Container__link--active" : ""
                                     }`
@@ -101,13 +136,7 @@ export default function Sidebar() {
                             <NavLink
                                 key={item.id}
                                 to={path}
-                                onClick={(e) => {
-                                    if (loading) {
-                                        e.preventDefault()
-                                        return
-                                    }
-                                    showLoader()
-                                }}
+                                onClick={(e) => handleNavigation(e, path)}
                                 className={({ isActive }) =>
                                     `Sidebar-Container__link ${isActive ? "Sidebar-Container__link--active" : ""
                                     }`
@@ -124,6 +153,17 @@ export default function Sidebar() {
                     )
                 }))}
             </div>
+            <ConfirmModal
+                open={showConfirmModal}
+                title="Discard changes"
+                message="You have unsaved changes.Do you want to leave the page?"
+                confirmText="Discard"
+                cancelText="Stay"
+                type="warning"
+                loading={false}
+                onConfirm={handleDiscard}
+                onCancel={handleCancel}
+            />
         </div>
     )
 }

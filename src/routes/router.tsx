@@ -8,6 +8,7 @@ import PublicRoute from "./PublicRoute"
 import Unauthorized from "../modules/Unauthorized"
 import { SafeRemote } from "../components/SafeRemote"
 import { retryImport } from "../utils/retryImport"
+import { useNavigationStore } from "../store/navigation.store"
 
 import Settings from "../modules/settings/Settings"
 
@@ -26,6 +27,7 @@ import { useParams, useNavigate } from "react-router-dom"
 const PlaygroundWrapper = () => {
     const { id } = useParams()
     const navigate = useNavigate()
+    const { setPlaygroundDirty } = useNavigationStore()
 
     useEffect(() => {
         const handler = (e: Event) => {
@@ -35,6 +37,18 @@ const PlaygroundWrapper = () => {
         window.addEventListener("prompt-version-created", handler)
         return () => window.removeEventListener("prompt-version-created", handler)
     }, [navigate])
+
+    useEffect(() => {
+        const handler = (e: any) => {
+            setPlaygroundDirty(e.detail)
+        }
+
+        window.addEventListener("playground-dirty-change", handler)
+
+        return () => {
+            window.removeEventListener("playground-dirty-change", handler)
+        }
+    }, [])
     return <Playground />
 }
 
