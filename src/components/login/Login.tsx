@@ -1,6 +1,8 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { login } from "../../services/auth.api"
+// import { login } from "../../services/auth.api"
+import { useMutation } from "@apollo/client/react"
+import { LOGIN_MUTATION, type LoginMutationsData, type LoginMutationVariables } from "../../graphql/auth/mutations"
 import { useAuth } from "../../store/auth.store"
 import { useUI } from "../../store/ui.store"
 import { toast } from "react-toastify"
@@ -20,8 +22,9 @@ const Login = () => {
     const [loading, setLoading] = useState(false)
 
     const navigate = useNavigate()
-    const { setUser } = useAuth()
+    const { setAuth } = useAuth()
     const { showLoader } = useUI()
+    const [loginMutation] = useMutation<LoginMutationsData, LoginMutationVariables>(LOGIN_MUTATION)
 
     const validate = () => {
         const uErr = validateUsername(username)
@@ -42,19 +45,29 @@ const Login = () => {
         setApiError("")
 
         try {
-            const user = await login(username, password)
-            const { password: _password, ...safeUser } = user || {}
+            const { data } = await loginMutation({
+                variables: {
+                    email: username,
+                    password
+                }
+            })
+            const result = data?.login
 
-            setUser(safeUser)
+            if (!result) {
+                throw new Error("Invalid login response")
+            }
+
+            setAuth(result.user, result.token)
             toast.success("Login successful")
             showLoader()
             navigate("/playground", { replace: true })
         } catch (err: any) {
-            toast.error(err.message || "Login failed")
-            setApiError(err.message)
+            const message = err?.message || "Login failed"
+            toast.error(message)
+            setApiError(message)
+        } finally {
+            setLoading(false)
         }
-
-        setLoading(false)
     }
 
     const isDisabled =

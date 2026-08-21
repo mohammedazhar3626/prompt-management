@@ -4,13 +4,15 @@ import { persist, createJSONStorage } from "zustand/middleware"
 type User = {
     id: number
     name: string
-    role: string
+    email: string;
+    role: "USER" | "ADMIN";
 }
 
 type AuthState = {
     user: User | null
+    token: string | null
     hasHydrated: boolean
-    setUser: (user: User) => void
+    setAuth: (user: User, token: string) => void
     logout: () => void
     setHasHydrated: (state: boolean) => void
 }
@@ -19,20 +21,21 @@ export const useAuth = create<AuthState>()(
     persist(
         (set) => ({
             user: null,
+            token: null,
             hasHydrated: false,
-            setUser: (user) => {
-                const { password, ...safeUser } = user as any
-                set({ user: safeUser })
+            setAuth: (user, token) => {
+                set({ user, token })
             },
             logout: () => {
-                sessionStorage.removeItem("auth-storage")
-                set({ user: null })
+                set({ user: null, token: null })
+                useAuth.persist.clearStorage();
+                localStorage.removeItem("auth-storage")
             },
             setHasHydrated: (state) => set({ hasHydrated: state })
         }),
         {
             name: "auth-storage",
-            storage: createJSONStorage(() => sessionStorage),
+            storage: createJSONStorage(() => localStorage),
             onRehydrateStorage: () => (state) => {
                 state?.setHasHydrated(true)
             }

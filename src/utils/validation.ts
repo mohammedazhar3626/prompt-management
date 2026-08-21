@@ -1,6 +1,7 @@
 export const validateUsername = (username: string) => {
     if (!username) return "Username is required"
-    if (!/^[a-zA-Z0-9_]{3,}$/.test(username)) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(username)) {
         return "Min 3 chars, no spaces"
     }
     return ""

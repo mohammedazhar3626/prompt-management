@@ -1,5 +1,6 @@
 const HtmlWebpackPlugin = require("html-webpack-plugin")
 const CopyWebpackPlugin = require("copy-webpack-plugin")
+const webpack = require("webpack")
 const { ModuleFederationPlugin } = require("webpack").container
 const path = require("path")
 const envFile = process.env.NODE_ENV === "production" ? ".env.prod" : ".env.dev"
@@ -63,6 +64,9 @@ module.exports = {
                 "react-router-dom": { singleton: true, requiredVersion: false },
                 "react-toastify": { singleton: true, requiredVersion: false }
             },
+        }),
+        new webpack.DefinePlugin({
+            "process.env.GRAPHQL_URL": JSON.stringify(process.env.GRAPHQL_URL)
         }),
         new HtmlWebpackPlugin({
             template: "./public/index.html",
