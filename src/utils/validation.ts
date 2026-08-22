@@ -1,8 +1,8 @@
-export const validateUsername = (username: string) => {
-    if (!username) return "Username is required"
+export const validateEmail = (email: string) => {
+    if (!email) return "Email is required"
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(username)) {
-        return "Min 3 chars, no spaces"
+    if (!emailRegex.test(email)) {
+        return "Enter a valid email address"
     }
     return ""
 }

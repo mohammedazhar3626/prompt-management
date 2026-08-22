@@ -23,6 +23,8 @@ const Evaluation = lazy(() => retryImport(() => import("evaluation/Evaluation"))
 
 //Local Navigation
 import { useParams, useNavigate } from "react-router-dom"
+import { ADMIN_DEVELOPER_ROLES, ADMIN_ROLES, ALL_ROLES } from "../constants/roles"
+import Signup from "../components/signup/Signup"
 
 const PlaygroundWrapper = () => {
     const { id } = useParams()
@@ -79,6 +81,14 @@ export const router = createHashRouter([
         )
     },
     {
+        path: "/signup",
+        element: (
+            <PublicRoute>
+                <Signup />
+            </PublicRoute>
+        )
+    },
+    {
         path: "/",
         element: <Layout />,
         children: [
@@ -89,7 +99,7 @@ export const router = createHashRouter([
             {
                 path: "playground",
                 element: (
-                    <ProtectedRoute allowedRoles={["admin", "developer", "user"]}>
+                    <ProtectedRoute allowedRoles={ALL_ROLES}>
                         <SafeRemote fallback={<div>Failed to load Playground</div>}>
                             <PlaygroundWrapper />
                         </SafeRemote>
@@ -101,7 +111,7 @@ export const router = createHashRouter([
             {
                 path: "templates",
                 element: (
-                    <ProtectedRoute allowedRoles={["admin", "developer", "user"]}>
+                    <ProtectedRoute allowedRoles={ALL_ROLES}>
                         <SafeRemote fallback={<div>Failed to load Templates</div>}>
                             <Templates />
                         </SafeRemote>
@@ -112,7 +122,7 @@ export const router = createHashRouter([
             {
                 path: "evaluation",
                 element: (
-                    <ProtectedRoute allowedRoles={["admin", "developer"]}>
+                    <ProtectedRoute allowedRoles={ADMIN_DEVELOPER_ROLES}>
                         <SafeRemote fallback={<div>Failed to load Evaluation</div>}>
                             <Evaluation />
                         </SafeRemote>
@@ -123,7 +133,7 @@ export const router = createHashRouter([
             {
                 path: "settings",
                 element: (
-                    <ProtectedRoute allowedRoles={["admin"]}>
+                    <ProtectedRoute allowedRoles={ADMIN_ROLES}>
                         <Settings />
                     </ProtectedRoute>
                 ),
@@ -132,7 +142,7 @@ export const router = createHashRouter([
             {
                 path: "/saved-prompts/:id",
                 element: (
-                    <ProtectedRoute allowedRoles={["admin", "developer", "user"]}>
+                    <ProtectedRoute allowedRoles={ALL_ROLES}>
                         <SafeRemote fallback={<div>Failed to load Saved Prompt</div>}>
                             <SavedPromptWrapper />
                         </SafeRemote>
@@ -143,9 +153,7 @@ export const router = createHashRouter([
             {
                 path: "unauthorized",
                 element: (
-                    <ProtectedRoute allowedRoles={["admin", "developer", "user"]}>
-                        <Unauthorized />
-                    </ProtectedRoute>
+                    <Unauthorized />
                 ),
                 handle: { title: "Unauthorized" }
             },

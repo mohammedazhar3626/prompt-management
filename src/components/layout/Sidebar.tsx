@@ -23,7 +23,7 @@ export default function Sidebar() {
     const syncPrompts = useSavedPrompts((s) => s.syncPrompts)
 
     const role = user?.role || ""
-    const menu = navigation.filter(item => item.roles.includes(role))
+    const menu = role ? navigation.filter(item => item.roles.includes(role)) : []
 
 
     const sidebarCollapsed = useUI((state) => state.sidebarCollapsed)

@@ -1,11 +1,12 @@
 import { create } from "zustand"
 import { persist, createJSONStorage } from "zustand/middleware"
+import { Role } from "../constants/roles"
 
 type User = {
     id: number
     name: string
     email: string;
-    role: "USER" | "ADMIN";
+    role: Role
 }
 
 type AuthState = {

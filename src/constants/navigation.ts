@@ -1,26 +1,27 @@
 import { MessageSquareText, SquarePlus } from 'lucide-react';
+import { ADMIN_DEVELOPER_ROLES, ADMIN_ROLES, ALL_ROLES } from './roles';
 
 export const navigation = [
     {
         label: 'Prompt Playground',
         path: '/playground',
-        roles: ['admin', 'developer', 'user'],
+        roles: ALL_ROLES,
         icon: MessageSquareText
     },
     {
         label: 'Template Library',
         path: '/templates',
-        roles: ['admin', 'developer', 'user'],
+        roles: ALL_ROLES,
         icon: SquarePlus
     }, {
         label: 'Evaluation Reports',
         path: '/evaluation',
-        roles: ['admin', 'developer'],
+        roles: ADMIN_DEVELOPER_ROLES,
         icon: SquarePlus
     }, {
         label: 'Settings',
         path: '/settings',
-        roles: ['admin'],
+        roles: ADMIN_ROLES,
         icon: SquarePlus,
         divider: true
     },
