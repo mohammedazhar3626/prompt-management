@@ -7,6 +7,7 @@ import { useAuth } from "../../store/auth.store"
 import { useUI } from "../../store/ui.store"
 import { toast } from "react-toastify"
 import { Eye, EyeOff } from "lucide-react"
+import { usePasswordReset } from "../../context/PasswordResetContext"
 import {
     validateEmail,
     validatePassword
@@ -20,6 +21,7 @@ const Login = () => {
     const [passwordError, setPasswordError] = useState("")
     const [showPassword, setShowPassword] = useState(false);
     const [rememberMe, setRememberMe] = useState(false)
+    const { clearResetFlow } = usePasswordReset();
 
     const [loading, setLoading] = useState(false)
 
@@ -78,6 +80,10 @@ const Login = () => {
             setLoading(false)
         }
     }
+
+    useEffect(() => {
+        clearResetFlow();
+    }, [clearResetFlow])
 
     useEffect(() => {
         const rememberedEmail = localStorage.getItem("remembered-email");
@@ -146,15 +152,25 @@ const Login = () => {
                         </div>
 
                     </div>
-                    <div className="login__options">
-                        <label className="login__remember">
-                            <input
-                                type="checkbox"
-                                checked={rememberMe}
-                                onChange={(e) => setRememberMe(e.target.checked)}
-                            />
-                            <span>Remember me</span>
-                        </label>
+                    <div className="login__options-wrapper">
+                        <div className="login__options">
+                            <label className="login__remember">
+                                <input
+                                    type="checkbox"
+                                    checked={rememberMe}
+                                    onChange={(e) => setRememberMe(e.target.checked)}
+                                />
+                                <span>Remember me</span>
+                            </label>
+                        </div>
+                        <div className="login__forgot-password">
+                            <button
+                                type="button"
+                                onClick={() => navigate("/forgot-password")}
+                            >
+                                Forgot password?
+                            </button>
+                        </div>
                     </div>
                     <button
                         type="submit"
@@ -176,7 +192,7 @@ const Login = () => {
                     </button>
                 </div>
             </div>
-        </div>
+        </div >
     )
 }
 

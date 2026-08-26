@@ -14,3 +14,72 @@ export const validatePassword = (password: string) => {
     }
     return ""
 }
+
+
+// -----------------------------
+
+// Live password validation
+
+// -----------------------------
+
+export const PASSWORD_RULES = {
+    minLength: {
+        test: (password: string) => password.length >= 8,
+        message: "At least 8 characters",
+    },
+
+    hasUppercase: {
+        test: (password: string) => /[A-Z]/.test(password),
+        message: "At least one uppercase letter",
+    },
+
+    hasLowercase: {
+        test: (password: string) => /[a-z]/.test(password),
+        message: "At least one lowercase letter",
+    },
+
+    hasNumber: {
+        test: (password: string) => /\d/.test(password),
+        message: "At least one number",
+    },
+
+    hasSpecialCharacter: {
+        test: (password: string) => /[^A-Za-z0-9]/.test(password),
+        message: "At least one special character",
+    },
+} as const;
+
+
+
+export const validatePasswordRule = (password: string) => {
+    return {
+        minLength: PASSWORD_RULES.minLength.test(password),
+        hasUppercase: PASSWORD_RULES.hasUppercase.test(password),
+        hasLowercase: PASSWORD_RULES.hasLowercase.test(password),
+        hasNumber: PASSWORD_RULES.hasNumber.test(password),
+        hasSpecialCharacter: PASSWORD_RULES.hasSpecialCharacter.test(password),
+    };
+};
+
+export const isPasswordValid = (password: string): boolean => {
+    const validation = validatePassword(password);
+
+    return Object.values(validation).every(Boolean);
+};
+
+export const isPasswordMatch = (
+    password: string,
+    confirmPassword: string
+): boolean => {
+    return (
+        confirmPassword.length > 0 &&
+        password === confirmPassword
+    );
+};
+
+export const VALIDATION_MESSAGES = {
+    passwordRequired: "Please enter a password.",
+    confirmPasswordRequired: "Please confirm your password.",
+    passwordMismatch: "Passwords do not match.",
+    passwordInvalid: "Password does not meet the requirements.",
+} as const;

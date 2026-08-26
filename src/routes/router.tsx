@@ -25,6 +25,8 @@ const Evaluation = lazy(() => retryImport(() => import("evaluation/Evaluation"))
 import { useParams, useNavigate } from "react-router-dom"
 import { ADMIN_DEVELOPER_ROLES, ADMIN_ROLES, ALL_ROLES } from "../constants/roles"
 import Signup from "../components/signup/Signup"
+import ForgotPassword from "../components/forgot-password/ForgotPassword"
+import ResetPassword from "../components/reset-password/ResetPassword"
 
 const PlaygroundWrapper = () => {
     const { id } = useParams()
@@ -85,6 +87,22 @@ export const router = createHashRouter([
         element: (
             <PublicRoute>
                 <Signup />
+            </PublicRoute>
+        )
+    },
+    {
+        path: "/forgot-password",
+        element: (
+            <PublicRoute>
+                <ForgotPassword />
+            </PublicRoute>
+        )
+    },
+    {
+        path: "/reset-password",
+        element: (
+            <PublicRoute>
+                <ResetPassword />
             </PublicRoute>
         )
     },

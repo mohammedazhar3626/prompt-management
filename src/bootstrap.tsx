@@ -4,12 +4,15 @@ import App from './App'
 import ErrorBoundary from "../src/components/ErrorBoundary"
 import { apolloClient } from './apollo/apolloClient'
 import { ApolloProvider } from '@apollo/client/react'
+import { PasswordResetProvider } from './context/PasswordResetContext'
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
         <ErrorBoundary>
             <ApolloProvider client={apolloClient}>
-                <App />
+                <PasswordResetProvider>
+                    <App />
+                </PasswordResetProvider>
             </ApolloProvider>
         </ErrorBoundary>
     </StrictMode>,
