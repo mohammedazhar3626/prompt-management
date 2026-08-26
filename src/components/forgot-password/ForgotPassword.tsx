@@ -170,6 +170,11 @@ const ForgotPassword = () => {
                 return;
             }
 
+            if (!result.challengeId) {
+                setError("If an account exists with this email, a verification code has been sent.");
+                return;
+            }
+
             if (!result.challengeId || !result?.expiresAt || !result.resendAvailableAt) {
                 setError("Invalid password reset response. Please try again.");
                 return;
