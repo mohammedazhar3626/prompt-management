@@ -3,7 +3,7 @@ import { persist, createJSONStorage } from "zustand/middleware"
 import { Role } from "../constants/roles"
 
 type User = {
-    id: number
+    id: string
     name: string
     email: string;
     role: Role

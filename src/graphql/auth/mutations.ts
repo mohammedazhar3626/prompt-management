@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client"
 
 export type AuthUser = {
-  id: number;
+  id: string;
   name: string;
   email: string;
   role: "USER" | "ADMIN"
@@ -86,7 +86,7 @@ export const LOGIN_MUTATION = gql`
 `;
 
 
-export const REGISTER_MUTATION = gql`
+export const REGISTER_USER = gql`
   mutation Register($name:String!,$email:String!,$password:String!){
     register(name:$name,email:$email,password:$password){
      token

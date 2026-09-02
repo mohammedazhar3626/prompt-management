@@ -27,6 +27,7 @@ import { ADMIN_DEVELOPER_ROLES, ADMIN_ROLES, ALL_ROLES } from "../constants/role
 import Signup from "../components/signup/Signup"
 import ForgotPassword from "../components/forgot-password/ForgotPassword"
 import ResetPassword from "../components/reset-password/ResetPassword"
+import Users from "../modules/settings/users/Users"
 
 const PlaygroundWrapper = () => {
     const { id } = useParams()
@@ -155,7 +156,14 @@ export const router = createHashRouter([
                         <Settings />
                     </ProtectedRoute>
                 ),
-                handle: { title: "Settings" }
+                handle: { title: "Settings" },
+                children: [
+                    {
+                        path: "users",
+                        element: <Users />,
+                        handle: { title: "Users Management" }
+                    }
+                ]
             },
             {
                 path: "/saved-prompts/:id",

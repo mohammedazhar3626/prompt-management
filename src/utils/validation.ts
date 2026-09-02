@@ -1,3 +1,29 @@
+export const NAME_MIN_LENGTH = 2;
+export const NAME_MAX_LENGTH = 50;
+
+export const validateName = (value: string): string => {
+    const trimmedValue = value.trim();
+
+    if (!trimmedValue) {
+        return "Name is required";
+    }
+
+    if (trimmedValue.length < NAME_MIN_LENGTH) {
+        return `Name must be at least ${NAME_MIN_LENGTH} characters`;
+    }
+
+    if (trimmedValue.length > NAME_MAX_LENGTH) {
+        return `Name must not exceed ${NAME_MAX_LENGTH} characters`;
+    }
+
+    // Only uppercase letters, lowercase letters and spaces
+    if (!/^[A-Za-z ]+$/.test(trimmedValue)) {
+        return "Name can contain only letters and spaces";
+    }
+
+    return "";
+};
+
 export const validateEmail = (email: string) => {
     if (!email) return "Email is required"
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

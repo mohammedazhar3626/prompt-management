@@ -3,7 +3,7 @@ import { useMutation } from "@apollo/client/react";
 import { useNavigate } from "react-router-dom";
 
 import {
-    REGISTER_MUTATION,
+    REGISTER_USER,
     RegisterMutationData,
     RegisterMutationVariables,
 } from "../../graphql/auth/mutations";
@@ -41,7 +41,7 @@ const Signup = () => {
     const [registerMutation] = useMutation<
         RegisterMutationData,
         RegisterMutationVariables
-    >(REGISTER_MUTATION);
+    >(REGISTER_USER);
 
     const validate = () => {
         let hasError = false;
